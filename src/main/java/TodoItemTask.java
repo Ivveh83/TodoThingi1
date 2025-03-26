@@ -8,16 +8,8 @@ public class TodoItemTask {
 
     TodoItemTask(TodoItem todoItem, Person assignee){
         this.id = ++counter;
-        if (todoItem == null){
-            throw new IllegalArgumentException("Must not be null");
-        }
-        this.todoItem = todoItem;
-        if (assignee == null){
-            this.assigned = false;
-        }else {
-            this.assigned = true;
-        }
-        this.assignee = assignee;
+        setTodoItem(todoItem);
+        setAssignee(assignee);
     }
 
     public int getId() {
@@ -50,6 +42,7 @@ public class TodoItemTask {
 
     public void setAssignee(Person assignee) {
         this.assignee = assignee;
+        this.assigned = true;
     }
 
     public String getSummary(){

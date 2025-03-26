@@ -9,14 +9,8 @@ public class Person {
     Person(String firstName, String lastName, String email) {
         this.id = ++counter;
         setFirstName(firstName);
-        if (lastName == null) {
-            throw new IllegalArgumentException("Must not be null");
-        }
-        this.lastName = lastName;
-        if (email == null) {
-            throw new IllegalArgumentException("Must not be null");
-        }
-            this.email = email;
+        setLastName(lastName);
+        setEmail(email);
     }
 
     Person(String firstName, String lastName){

@@ -12,22 +12,15 @@ public class TodoItem {
 
     TodoItem(String title, String description, LocalDate deadLine, boolean done, Person creator){
         this.id = ++counter;
-        if (title == null){
-            throw new IllegalArgumentException("Must not be null");
-        }else if (title.isEmpty()) {
-            throw new IllegalArgumentException("Must not be empty");
-        } else if (title.isBlank()) {
-            throw new IllegalArgumentException("Must not contain of only spaces");
-        }
-        this.title = title;
+        setTitle(title);
         this.description = description;
-        if (deadLine == null){
-            throw new IllegalArgumentException("Must not be null");
-        }
-        this.deadLine = deadLine;
+        setDeadLine(deadLine);
         this.done = done;
         this.creator = creator;
+    }
 
+    TodoItem(String title, LocalDate deadLine){
+        this(title, null, deadLine, false, null);
     }
 
     public int getId() {
