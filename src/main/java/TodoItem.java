@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class TodoItem {
 
@@ -83,24 +84,27 @@ public class TodoItem {
         }
     }
 
-    public String getSummary(){
-        String firstName;
-        String lastName;
-        try {
-            firstName = getCreator().getFirstName();
-            lastName = getCreator().getLastName();
-        }catch (NullPointerException e){
-            firstName = "n/a";
-            lastName = "";
-        }
-        StringBuilder sb = new StringBuilder();
-        sb.append("title: " + getTitle())
-                        .append(", description: " + getDescription())
-                        .append(", deadLine: " + getDeadLine())
-                        .append(", done: " + getDone())
-                        .append(", creator: " + firstName + " " + lastName);
+    @Override
+    public String toString() {
+        return "TodoItem{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", deadLine=" + deadLine +
+                ", done=" + done +
+                '}';
+    }
 
-        return sb.toString();
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        TodoItem todoItem = (TodoItem) o;
+        return id == todoItem.id && done == todoItem.done && Objects.equals(title, todoItem.title) && Objects.equals(description, todoItem.description) && Objects.equals(deadLine, todoItem.deadLine);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, description, deadLine, done);
     }
 
     public boolean isOverdue(){

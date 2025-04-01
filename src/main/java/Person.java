@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 public class Person {
 
     static int counter;
@@ -5,6 +7,7 @@ public class Person {
     private String firstName;
     private String lastName;
     private String email;
+    private AppUser credentials;
 
     Person(String firstName, String lastName, String email) {
         this.id = ++counter;
@@ -51,7 +54,15 @@ public class Person {
             this.email = email;
         }
     }
-    public String summary(){
+    public void setCredentials(AppUser credentials) {
+        this.credentials = credentials;
+    }
+    public AppUser getCredentials() {
+        return credentials;
+    }
+
+    @Override
+    public String toString(){
 
 //StringBuilder sb = new StringBuilder(); .append(), String result = sb.toString();
         StringBuilder sb = new StringBuilder();
@@ -60,7 +71,17 @@ public class Person {
                 .append(", email: ").append(this.getEmail());
         return sb.toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return id == person.id && Objects.equals(firstName, person.firstName) && Objects.equals(lastName, person.lastName)
+                && Objects.equals(email, person.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName, lastName, email);
+    }
 }
-//System.out.println("id: " + this.getId() +
-//                ", name: " + this.getFirstName() + " " + this.getLastName() +
-//                ", email: " + this.getEmail());

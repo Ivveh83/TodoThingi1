@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 public class TodoItemTask {
 
     static int counter;
@@ -45,22 +47,24 @@ public class TodoItemTask {
         this.assigned = true;
     }
 
-    public String getSummary(){
-        String firstName;
-        String lastName;
-        try {
-            firstName = this.getAssignee().getFirstName();
-            lastName = this.getAssignee().getLastName();
-        }catch (NullPointerException e){
-            firstName = "n/a";
-            lastName = "";
-        }
-        StringBuilder sb = new StringBuilder();
-        sb.append("id: " + this.getId())
-                        .append(", assigned: " + this.getAssigned() )
-                        .append(", todoItem: " + this.getTodoItem().getTitle() )
-                        .append(", assignee: " + firstName + " " + lastName);
+    @Override
+    public String toString() {
+        return "TodoItemTask{" +
+                "id=" + id +
+                ", assigned=" + assigned +
+                ", todoItem=" + todoItem +
+                '}';
+    }
 
-        return sb.toString();
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        TodoItemTask that = (TodoItemTask) o;
+        return id == that.id && assigned == that.assigned && Objects.equals(todoItem, that.todoItem);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, assigned, todoItem);
     }
 }
