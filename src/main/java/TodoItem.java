@@ -99,7 +99,8 @@ public class TodoItem {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         TodoItem todoItem = (TodoItem) o;
-        return id == todoItem.id && done == todoItem.done && Objects.equals(title, todoItem.title) && Objects.equals(description, todoItem.description) && Objects.equals(deadLine, todoItem.deadLine);
+        return id == todoItem.id && done == todoItem.done && Objects.equals(title, todoItem.title)
+                && Objects.equals(description, todoItem.description) && Objects.equals(deadLine, todoItem.deadLine);
     }
 
     @Override

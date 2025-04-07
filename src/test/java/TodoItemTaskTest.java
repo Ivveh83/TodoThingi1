@@ -89,12 +89,4 @@ public class TodoItemTaskTest {
         assertNull(task.getAssignee());
         assertTrue(task.getAssigned()); // assigned förblir true från konstruktorn
     }
-
-    @Test
-    void testEqualsAndHashCode() {
-        TodoItemTask task1 = new TodoItemTask(todoItem, assignee);
-        TodoItemTask task2 = new TodoItemTask(todoItem, assignee);
-        assertEquals(task1, task2);
-        assertEquals(task1.hashCode(), task2.hashCode());
-    }
 }

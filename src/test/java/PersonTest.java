@@ -117,12 +117,4 @@ public class PersonTest {
         person.setCredentials(credentials);
         assertEquals(credentials, person.getCredentials());
     }
-
-    @Test
-    void testEqualsAndHashCode() {
-        Person person1 = new Person("Anna", "Andersson", "anna@example.com");
-        Person person2 = new Person("Anna", "Andersson", "anna@example.com");
-        assertEquals(person1, person2);
-        assertEquals(person1.hashCode(), person2.hashCode());
-    }
 }

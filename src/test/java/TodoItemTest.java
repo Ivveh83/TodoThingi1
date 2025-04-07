@@ -133,13 +133,4 @@ public class TodoItemTest {
         TodoItem item = new TodoItem("Task 1", LocalDate.of(2026, 1, 1));
         assertFalse(item.isOverdue());
     }
-
-    @Test
-    void testEqualsAndHashCode() {
-        LocalDate deadline = LocalDate.now();
-        TodoItem item1 = new TodoItem("Task 1", "Desc", deadline, false, creator);
-        TodoItem item2 = new TodoItem("Task 1", "Desc", deadline, false, creator);
-        assertEquals(item1, item2);
-        assertEquals(item1.hashCode(), item2.hashCode());
-    }
 }

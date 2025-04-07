@@ -17,7 +17,7 @@ public class AppUser {
     }
 
     public void setUsername(String username) {
-        if (!username.isEmpty() && username != null && !username.isBlank()) this.username = username;
+        if (username != null && !username.isEmpty() && !username.isBlank()) this.username = username;
         else throw new IllegalArgumentException("Not allowed to be empty or null");
     }
 
@@ -26,7 +26,7 @@ public class AppUser {
     }
 
     public void setPassword(String password) {
-        if (!password.isEmpty() && password != null && !password.isBlank()) this.password = password;
+        if ( password != null && !password.isEmpty() && !password.isBlank()) this.password = password;
         else throw new IllegalArgumentException("Not allowed to be empty or null");
     }
 

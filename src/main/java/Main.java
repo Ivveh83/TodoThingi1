@@ -20,7 +20,7 @@ public class Main {
         TodoItemTask todoItemTask1 = new TodoItemTask(todoItem1, person1);
         System.out.println(todoItemTask1);
 
-        AppUser appUser = new AppUser("Aragorn", "qwerty", AppRole.ROLE_APP_USER);
+        AppUser appUser = new AppUser("Gizmo-quack", "qwerty", AppRole.ROLE_APP_USER);
         System.out.println(appUser);
         System.out.println(appUser.hashCode());
         System.out.println(new Object().equals(appUser));
