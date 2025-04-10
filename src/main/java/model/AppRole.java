@@ -1,3 +1,5 @@
+package model;
+
 public enum AppRole {
 
     ROLE_APP_USER,

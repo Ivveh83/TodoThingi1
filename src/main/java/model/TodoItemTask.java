@@ -1,21 +1,27 @@
+package model;
+
 import java.util.Objects;
 
 public class TodoItemTask {
 
-    static int counter;
+//    static int counter;
     private int id;
     private boolean assigned;
     private TodoItem todoItem;
     private Person assignee;
 
-    TodoItemTask(TodoItem todoItem, Person assignee){
-        this.id = ++counter;
+    public TodoItemTask(TodoItem todoItem, Person assignee){
+//        this.id = ++counter;
         setTodoItem(todoItem);
         setAssignee(assignee);
     }
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public boolean getAssigned() {

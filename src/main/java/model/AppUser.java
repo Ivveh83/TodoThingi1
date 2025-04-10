@@ -1,15 +1,24 @@
+package model;
+
 import java.util.Objects;
 
 public class AppUser {
 
+    private int id;
     private String username;
     private String password;
     private AppRole role;
 
-    AppUser(String username, String password, AppRole role){
+    public AppUser(String username, String password, AppRole role){
         setUsername(username);
         setPassword(password);
         setRole(role);
+    }
+
+    public int getId() { return id;}
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getUsername() {

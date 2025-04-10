@@ -1,3 +1,6 @@
+package model;
+
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
@@ -17,23 +20,23 @@ public class TodoItemTest {
     void testConstructorValidInput() {
         LocalDate deadline = LocalDate.of(2025, 12, 31);
         TodoItem item = new TodoItem("Task 1", "Description", deadline, false, creator);
-        assertEquals(1, item.getId());
-        assertEquals("Task 1", item.getTitle());
-        assertEquals("Description", item.getDescription());
-        assertEquals(deadline, item.getDeadLine());
-        assertFalse(item.getDone());
-        assertEquals(creator, item.getCreator());
+        Assertions.assertEquals(1, item.getId());
+        Assertions.assertEquals("Task 1", item.getTitle());
+        Assertions.assertEquals("Description", item.getDescription());
+        Assertions.assertEquals(deadline, item.getDeadLine());
+        Assertions.assertFalse(item.getDone());
+        Assertions.assertEquals(creator, item.getCreator());
     }
 
     @Test
     void testConstructorWithDefaultValues() {
         LocalDate deadline = LocalDate.of(2025, 12, 31);
         TodoItem item = new TodoItem("Task 1", deadline);
-        assertEquals(1, item.getId());
-        assertEquals("Task 1", item.getTitle());
+        Assertions.assertEquals(1, item.getId());
+        Assertions.assertEquals("Task 1", item.getTitle());
         assertNull(item.getDescription());
-        assertEquals(deadline, item.getDeadLine());
-        assertFalse(item.getDone());
+        Assertions.assertEquals(deadline, item.getDeadLine());
+        Assertions.assertFalse(item.getDone());
         assertNull(item.getCreator());
     }
 
@@ -42,43 +45,43 @@ public class TodoItemTest {
         LocalDate deadline = LocalDate.of(2025, 12, 31);
         TodoItem item1 = new TodoItem("Task 1", deadline);
         TodoItem item2 = new TodoItem("Task 2", deadline);
-        assertEquals(1, item1.getId());
-        assertEquals(2, item2.getId());
+        Assertions.assertEquals(1, item1.getId());
+        Assertions.assertEquals(2, item2.getId());
     }
 
     @Test
     void testSetTitleValid() {
         TodoItem item = new TodoItem("Task 1", LocalDate.now());
         item.setTitle("New Task");
-        assertEquals("New Task", item.getTitle());
+        Assertions.assertEquals("New Task", item.getTitle());
     }
 
     @Test
     void testSetTitleNullDoesNotUpdate() {
         TodoItem item = new TodoItem("Task 1", LocalDate.now());
         item.setTitle(null);
-        assertEquals("Task 1", item.getTitle());
+        Assertions.assertEquals("Task 1", item.getTitle());
     }
 
     @Test
     void testSetTitleEmptyDoesNotUpdate() {
         TodoItem item = new TodoItem("Task 1", LocalDate.now());
         item.setTitle("");
-        assertEquals("Task 1", item.getTitle());
+        Assertions.assertEquals("Task 1", item.getTitle());
     }
 
     @Test
     void testSetTitleBlankDoesNotUpdate() {
         TodoItem item = new TodoItem("Task 1", LocalDate.now());
         item.setTitle("   ");
-        assertEquals("Task 1", item.getTitle());
+        Assertions.assertEquals("Task 1", item.getTitle());
     }
 
     @Test
     void testSetDescription() {
         TodoItem item = new TodoItem("Task 1", LocalDate.now());
         item.setDescription("New Description");
-        assertEquals("New Description", item.getDescription());
+        Assertions.assertEquals("New Description", item.getDescription());
         item.setDescription(null);
         assertNull(item.getDescription());
     }
@@ -88,7 +91,7 @@ public class TodoItemTest {
         TodoItem item = new TodoItem("Task 1", LocalDate.now());
         LocalDate newDeadline = LocalDate.of(2026, 1, 1);
         item.setDeadLine(newDeadline);
-        assertEquals(newDeadline, item.getDeadLine());
+        Assertions.assertEquals(newDeadline, item.getDeadLine());
     }
 
     @Test
@@ -96,14 +99,14 @@ public class TodoItemTest {
         LocalDate deadline = LocalDate.now();
         TodoItem item = new TodoItem("Task 1", deadline);
         item.setDeadLine(null);
-        assertEquals(deadline, item.getDeadLine());
+        Assertions.assertEquals(deadline, item.getDeadLine());
     }
 
     @Test
     void testSetDone() {
         TodoItem item = new TodoItem("Task 1", LocalDate.now());
         item.setDone(true);
-        assertTrue(item.getDone());
+        Assertions.assertTrue(item.getDone());
     }
 
     @Test
@@ -111,7 +114,7 @@ public class TodoItemTest {
         TodoItem item = new TodoItem("Task 1", LocalDate.now());
         Person newCreator = new Person("Ben", "Bengtsson");
         item.setCreator(newCreator);
-        assertEquals(newCreator, item.getCreator());
+        Assertions.assertEquals(newCreator, item.getCreator());
     }
 
     @Test
@@ -119,18 +122,18 @@ public class TodoItemTest {
         TodoItem item = new TodoItem("Task 1", LocalDate.now());
         item.setCreator(creator);
         item.setCreator(null);
-        assertEquals(creator, item.getCreator());
+        Assertions.assertEquals(creator, item.getCreator());
     }
 
     @Test
     void testIsOverdueTrue() {
         TodoItem item = new TodoItem("Task 1", LocalDate.of(2020, 1, 1));
-        assertTrue(item.isOverdue());
+        Assertions.assertTrue(item.isOverdue());
     }
 
     @Test
     void testIsOverdueFalse() {
         TodoItem item = new TodoItem("Task 1", LocalDate.of(2026, 1, 1));
-        assertFalse(item.isOverdue());
+        Assertions.assertFalse(item.isOverdue());
     }
 }

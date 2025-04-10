@@ -1,3 +1,6 @@
+package model;
+
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
@@ -19,26 +22,26 @@ public class TodoItemTaskTest {
     @Test
     void testConstructorValidInput() {
         TodoItemTask task = new TodoItemTask(todoItem, assignee);
-        assertEquals(1, task.getId());
-        assertTrue(task.getAssigned());
-        assertEquals(todoItem, task.getTodoItem());
-        assertEquals(assignee, task.getAssignee());
+        Assertions.assertEquals(1, task.getId());
+        Assertions.assertTrue(task.getAssigned());
+        Assertions.assertEquals(todoItem, task.getTodoItem());
+        Assertions.assertEquals(assignee, task.getAssignee());
     }
 
     @Test
     void testConstructorNullTodoItemDoesNotUpdate() {
         TodoItemTask task = new TodoItemTask(null, assignee);
         assertNull(task.getTodoItem());
-        assertEquals(assignee, task.getAssignee());
-        assertTrue(task.getAssigned());
+        Assertions.assertEquals(assignee, task.getAssignee());
+        Assertions.assertTrue(task.getAssigned());
     }
 
     @Test
     void testConstructorNullAssignee() {
         TodoItemTask task = new TodoItemTask(todoItem, null);
-        assertEquals(1, task.getId());
-        assertTrue(task.getAssigned()); // assigned blir true ändå pga setAssignee(null)
-        assertEquals(todoItem, task.getTodoItem());
+        Assertions.assertEquals(1, task.getId());
+        Assertions.assertTrue(task.getAssigned()); // assigned blir true ändå pga setAssignee(null)
+        Assertions.assertEquals(todoItem, task.getTodoItem());
         assertNull(task.getAssignee());
     }
 
@@ -46,17 +49,17 @@ public class TodoItemTaskTest {
     void testCounterIncrements() {
         TodoItemTask task1 = new TodoItemTask(todoItem, assignee);
         TodoItemTask task2 = new TodoItemTask(todoItem, null);
-        assertEquals(1, task1.getId());
-        assertEquals(2, task2.getId());
+        Assertions.assertEquals(1, task1.getId());
+        Assertions.assertEquals(2, task2.getId());
     }
 
     @Test
     void testSetAssigned() {
         TodoItemTask task = new TodoItemTask(todoItem, assignee);
         task.setAssigned(false);
-        assertFalse(task.getAssigned());
+        Assertions.assertFalse(task.getAssigned());
         task.setAssigned(true);
-        assertTrue(task.getAssigned());
+        Assertions.assertTrue(task.getAssigned());
     }
 
     @Test
@@ -64,22 +67,22 @@ public class TodoItemTaskTest {
         TodoItemTask task = new TodoItemTask(todoItem, assignee);
         TodoItem newTodoItem = new TodoItem("Task 2", LocalDate.now());
         task.setTodoItem(newTodoItem);
-        assertEquals(newTodoItem, task.getTodoItem());
+        Assertions.assertEquals(newTodoItem, task.getTodoItem());
     }
 
     @Test
     void testSetTodoItemNullDoesNotUpdate() {
         TodoItemTask task = new TodoItemTask(todoItem, assignee);
         task.setTodoItem(null);
-        assertEquals(todoItem, task.getTodoItem());
+        Assertions.assertEquals(todoItem, task.getTodoItem());
     }
 
     @Test
     void testSetAssigneeValid() {
         TodoItemTask task = new TodoItemTask(todoItem, null);
         task.setAssignee(assignee);
-        assertEquals(assignee, task.getAssignee());
-        assertTrue(task.getAssigned());
+        Assertions.assertEquals(assignee, task.getAssignee());
+        Assertions.assertTrue(task.getAssigned());
     }
 
     @Test
@@ -87,6 +90,6 @@ public class TodoItemTaskTest {
         TodoItemTask task = new TodoItemTask(todoItem, assignee);
         task.setAssignee(null);
         assertNull(task.getAssignee());
-        assertTrue(task.getAssigned()); // assigned förblir true från konstruktorn
+        Assertions.assertTrue(task.getAssigned()); // assigned förblir true från konstruktorn
     }
 }

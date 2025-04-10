@@ -1,28 +1,31 @@
+package model;
+
 import java.util.Objects;
 
 public class Person {
 
-    static int counter;
+//    static int counter;
     private int id;
     private String firstName;
     private String lastName;
     private String email;
     private AppUser credentials;
 
-    Person(String firstName, String lastName, String email) {
-        this.id = ++counter;
+    public Person(String firstName, String lastName, String email) {
+//        this.id = ++counter;
         setFirstName(firstName);
         setLastName(lastName);
         setEmail(email);
     }
 
-    Person(String firstName, String lastName){
+    public Person(String firstName, String lastName){
         this(firstName, lastName, "mail@example.com");
     }
 
     public int getId() {
         return id;
     }
+    public void setId(int id) {this.id = id;}
     public String getFirstName() {
         return firstName;
     }

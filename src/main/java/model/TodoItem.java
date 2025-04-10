@@ -1,9 +1,11 @@
+package model;
+
 import java.time.LocalDate;
 import java.util.Objects;
 
 public class TodoItem {
 
-    static int counter;
+//    static int counter;
     private int id;
     private String title;
     private String description;
@@ -11,8 +13,8 @@ public class TodoItem {
     private boolean done;
     private Person creator;
 
-    TodoItem(String title, String description, LocalDate deadLine, boolean done, Person creator){
-        this.id = ++counter;
+    public TodoItem(String title, String description, LocalDate deadLine, boolean done, Person creator){
+//        this.id = ++counter;
         setTitle(title);
         this.description = description;
         setDeadLine(deadLine);
@@ -26,6 +28,10 @@ public class TodoItem {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTitle() {

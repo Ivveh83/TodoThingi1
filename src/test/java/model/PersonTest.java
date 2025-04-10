@@ -1,12 +1,16 @@
+package model;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import sequenzers.PersonIdSequencer;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PersonTest {
 
     @BeforeEach
     void setUp() {
-        Person.counter = 0; // Återställ counter före varje test
+        PersonIdSequencer.setCurrentId(0); // Återställ counter före varje test
     }
 
     @Test
