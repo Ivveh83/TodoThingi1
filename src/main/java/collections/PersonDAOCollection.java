@@ -11,8 +11,7 @@ public class PersonDAOCollection {
 
     public Person persist(Person person) { // person data from the method param has no id
         person.setId(PersonIdSequencer.nextId()); // 123456
-        personArrayList.add(person);
-        // person data has id
+        personArrayList.add(person); // person data has id
         return person;
     }
 

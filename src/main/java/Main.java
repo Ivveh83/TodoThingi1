@@ -35,7 +35,7 @@ public class Main {
         System.out.println("Deadline overdue: " + todoItem1.isOverdue());
 
         TodoItemTask todoItemTask1 = new TodoItemTask(todoItem1, person1);
-        System.out.println(todoItemTask1);
+        System.out.println("assigned: " + todoItemTask1.getAssigned());
 
         AppUser appUser = new AppUser("Gizmo-quack", "qwerty", AppRole.ROLE_APP_USER);
         System.out.println(appUser);

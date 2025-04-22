@@ -1,5 +1,6 @@
 package model;
 
+import collections.PersonDAOCollection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sequenzers.PersonIdSequencer;
@@ -16,6 +17,10 @@ public class PersonTest {
     @Test
     void testConstructorValidInput() {
         Person person = new Person("Anna", "Andersson", "anna@example.com");
+        PersonDAOCollection collection = new PersonDAOCollection();
+
+        collection.persist(person);
+
         assertEquals(1, person.getId());
         assertEquals("Anna", person.getFirstName());
         assertEquals("Andersson", person.getLastName());
@@ -25,6 +30,10 @@ public class PersonTest {
     @Test
     void testConstructorWithDefaultEmail() {
         Person person = new Person("Anna", "Andersson");
+        PersonDAOCollection collection = new PersonDAOCollection();
+
+        collection.persist(person);
+
         assertEquals(1, person.getId());
         assertEquals("Anna", person.getFirstName());
         assertEquals("Andersson", person.getLastName());
@@ -59,6 +68,9 @@ public class PersonTest {
     void testCounterIncrements() {
         Person person1 = new Person("Anna", "Andersson");
         Person person2 = new Person("Ben", "Bengtsson");
+        PersonDAOCollection collection = new PersonDAOCollection();
+        collection.persist(person1);
+        collection.persist(person2);
         assertEquals(1, person1.getId());
         assertEquals(2, person2.getId());
     }

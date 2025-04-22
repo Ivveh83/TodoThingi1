@@ -1,8 +1,13 @@
 package model;
 
+import DAO.TodoItemTaskDAO;
+import collections.TodoItemTaskDAOCollection;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import sequenzers.TodoItemIdSequencer;
+import sequenzers.TodoItemTaskIdSequencer;
+
 import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,7 +18,7 @@ public class TodoItemTaskTest {
 
     @BeforeEach
     void setUp() {
-        TodoItemTask.counter = 0;
+        TodoItemTaskIdSequencer.setCurrentId(0);
         Person creator = new Person("Anna", "Andersson");
         todoItem = new TodoItem("Task 1", LocalDate.now());
         assignee = new Person("Ben", "Bengtsson");
@@ -22,7 +27,7 @@ public class TodoItemTaskTest {
     @Test
     void testConstructorValidInput() {
         TodoItemTask task = new TodoItemTask(todoItem, assignee);
-        Assertions.assertEquals(1, task.getId());
+        Assertions.assertEquals(0, task.getId());
         Assertions.assertTrue(task.getAssigned());
         Assertions.assertEquals(todoItem, task.getTodoItem());
         Assertions.assertEquals(assignee, task.getAssignee());
@@ -39,7 +44,7 @@ public class TodoItemTaskTest {
     @Test
     void testConstructorNullAssignee() {
         TodoItemTask task = new TodoItemTask(todoItem, null);
-        Assertions.assertEquals(1, task.getId());
+        Assertions.assertEquals(0, task.getId());
         Assertions.assertTrue(task.getAssigned()); // assigned blir true ändå pga setAssignee(null)
         Assertions.assertEquals(todoItem, task.getTodoItem());
         assertNull(task.getAssignee());
@@ -49,8 +54,11 @@ public class TodoItemTaskTest {
     void testCounterIncrements() {
         TodoItemTask task1 = new TodoItemTask(todoItem, assignee);
         TodoItemTask task2 = new TodoItemTask(todoItem, null);
-        Assertions.assertEquals(1, task1.getId());
-        Assertions.assertEquals(2, task2.getId());
+        TodoItemTaskDAOCollection collection = new TodoItemTaskDAOCollection();
+        TodoItemTask registeredTask1 = collection.persist(task1);
+        TodoItemTask registeredTask2 = collection.persist(task2);
+        Assertions.assertEquals(1, registeredTask1.getId());
+        Assertions.assertEquals(2, registeredTask2.getId());
     }
 
     @Test

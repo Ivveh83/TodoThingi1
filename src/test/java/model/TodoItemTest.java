@@ -1,25 +1,33 @@
 package model;
 
+import collections.TodoItemDAOCollection;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import sequenzers.TodoItemIdSequencer;
+
 import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TodoItemTest {
 
     private Person creator;
+    private TodoItemDAOCollection collection;
 
     @BeforeEach
     void setUp() {
-        TodoItem.counter = 0;
+        TodoItemIdSequencer.setCurrentId(0);
         creator = new Person("Anna", "Andersson", "anna@example.com");
+        collection = new TodoItemDAOCollection();
     }
 
     @Test
     void testConstructorValidInput() {
         LocalDate deadline = LocalDate.of(2025, 12, 31);
         TodoItem item = new TodoItem("Task 1", "Description", deadline, false, creator);
+
+        collection.persist(item);
+
         Assertions.assertEquals(1, item.getId());
         Assertions.assertEquals("Task 1", item.getTitle());
         Assertions.assertEquals("Description", item.getDescription());
@@ -32,6 +40,9 @@ public class TodoItemTest {
     void testConstructorWithDefaultValues() {
         LocalDate deadline = LocalDate.of(2025, 12, 31);
         TodoItem item = new TodoItem("Task 1", deadline);
+
+        collection.persist(item);
+
         Assertions.assertEquals(1, item.getId());
         Assertions.assertEquals("Task 1", item.getTitle());
         assertNull(item.getDescription());
@@ -45,6 +56,10 @@ public class TodoItemTest {
         LocalDate deadline = LocalDate.of(2025, 12, 31);
         TodoItem item1 = new TodoItem("Task 1", deadline);
         TodoItem item2 = new TodoItem("Task 2", deadline);
+
+        collection.persist(item1);
+        collection.persist(item2);
+
         Assertions.assertEquals(1, item1.getId());
         Assertions.assertEquals(2, item2.getId());
     }

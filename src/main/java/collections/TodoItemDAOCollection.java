@@ -41,7 +41,7 @@ public class TodoItemDAOCollection {
     public ArrayList<TodoItem> findByTitleContains(String title) {
         ArrayList<TodoItem> arrayList = new ArrayList<>();
         for (TodoItem todoItem : todoItemArrayList){
-            if (todoItem.getTitle() == title) arrayList.add(todoItem);
+            if (todoItem.getTitle().equals(title)) arrayList.add(todoItem);
         }
         return arrayList;
     }
@@ -49,7 +49,7 @@ public class TodoItemDAOCollection {
     public ArrayList<TodoItem> findByPersonId(int personId) {
         ArrayList<TodoItem> arrayList = new ArrayList<>();
         for (TodoItem todoItem : todoItemArrayList){
-            if (todoItem.getId() == personId) arrayList.add(todoItem);
+            if (todoItem.getCreator().getId() == personId) arrayList.add(todoItem);
         }
         return arrayList;
     }

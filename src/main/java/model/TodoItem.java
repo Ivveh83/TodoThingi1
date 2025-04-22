@@ -42,7 +42,7 @@ public class TodoItem {
         if (title == null) {
             System.out.println("Must not be null");
         } else if (title.isBlank()) {
-            System.out.println("Must not contain of only spaces");
+            System.out.println("Must not contain only spaces");
         } else if (title.isEmpty()) {
             System.out.println("Must not be empty");
         } else {
