@@ -1,6 +1,5 @@
 package collections;
 
-import model.TodoItem;
 import model.TodoItemTask;
 import sequenzers.TodoItemIdSequencer;
 

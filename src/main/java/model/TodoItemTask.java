@@ -7,12 +7,12 @@ public class TodoItemTask {
 //    static int counter;
     private int id;
     private boolean assigned;
-    private TodoItem todoItem;
+    private Todo todo;
     private Person assignee;
 
-    public TodoItemTask(TodoItem todoItem, Person assignee){
+    public TodoItemTask(Todo todo, Person assignee){
 //        this.id = ++counter;
-        setTodoItem(todoItem);
+        setTodoItem(todo);
         setAssignee(assignee);
     }
 
@@ -32,15 +32,15 @@ public class TodoItemTask {
         this.assigned = assigned;
     }
 
-    public TodoItem getTodoItem() {
-        return todoItem;
+    public Todo getTodoItem() {
+        return todo;
     }
 
-    public void setTodoItem(TodoItem todoItem) {
-        if (todoItem == null){
+    public void setTodoItem(Todo todo) {
+        if (todo == null){
             System.out.println("Must not be null");
         }else {
-            this.todoItem = todoItem;
+            this.todo = todo;
         }
     }
 
@@ -58,7 +58,7 @@ public class TodoItemTask {
         return "TodoItemTask{" +
                 "id=" + id +
                 ", assigned=" + assigned +
-                ", todoItem=" + todoItem +
+                ", todoItem=" + todo +
                 '}';
     }
 
@@ -66,11 +66,11 @@ public class TodoItemTask {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         TodoItemTask that = (TodoItemTask) o;
-        return id == that.id && assigned == that.assigned && Objects.equals(todoItem, that.todoItem);
+        return id == that.id && assigned == that.assigned && Objects.equals(todo, that.todo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, assigned, todoItem);
+        return Objects.hash(id, assigned, todo);
     }
 }
