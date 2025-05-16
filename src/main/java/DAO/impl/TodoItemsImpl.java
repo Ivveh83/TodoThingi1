@@ -25,7 +25,7 @@ public class TodoItemsImpl implements TodoItems {
             preparedStatement.setDate(3, Date.valueOf(todo.getDeadLine()));
             preparedStatement.setBoolean(4, todo.getDone());
             if (todo.getAssignee_id() == null) {
-                preparedStatement.setNull(5, todo.getAssignee_id());
+                preparedStatement.setNull(5, java.sql.Types.INTEGER);
             }else {
                 preparedStatement.setInt(5, todo.getAssignee_id());
             }
@@ -174,7 +174,7 @@ public class TodoItemsImpl implements TodoItems {
     }
 
     public boolean deleteById(int id) {
-        String sql = "DELETE FROM todo WHERE todo_id = ?";
+        String sql = "DELETE FROM todo_item WHERE todo_id = ?";
         try {
             PreparedStatement deleteTodo = connection.prepareStatement(sql);
             deleteTodo.setInt(1, id);
@@ -183,7 +183,7 @@ public class TodoItemsImpl implements TodoItems {
                 return true;
             }
         } catch (SQLException e) {
-            System.out.println("Error by deleting person");
+            System.out.println("Error by deleting todo");
             e.printStackTrace();
         }
         return false;

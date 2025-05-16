@@ -100,7 +100,7 @@ public class Todo {
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", deadLine=" + deadLine +
-                ", isDone=" + done +
+                ", done=" + done +
                 ", assignee_id=" + assignee_id +
                 '}';
     }

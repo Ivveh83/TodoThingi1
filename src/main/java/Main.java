@@ -12,7 +12,7 @@ import java.util.*;
 public class Main {
     public static void main(String[] args) {
 
-        printByAssigneeId();
+        deleteTodo();
 
     }
 
@@ -126,19 +126,28 @@ public class Main {
             String deadlineAsString = scanner.nextLine();
             LocalDate deadline = LocalDate.parse(deadlineAsString);
             System.out.println("Enter Assignee Id: ");
-            Integer assignee_id = scanner.nextInt();
-            scanner.nextLine();
-
-            // Controlling that a matching person_id do exist
-            People people = new PeopleImpl(MySQLConnection.getConnection());
-            Collection<Person> personCollection = people.findAll();
-            boolean assigneeIdExistsAsPersonID = false;
-            for (Person person : personCollection) {
-                if (person.getPerson_id() == assignee_id)
-                    assigneeIdExistsAsPersonID = true;
+            Integer assignee_id = null;
+            try {
+                assignee_id = scanner.nextInt();
+            }catch (InputMismatchException ignored) {
+            }finally {
+                scanner.nextLine();
             }
 
-            if (assigneeIdExistsAsPersonID) {
+            // Controlling that assignee_id has a matching person_id
+            boolean assigneeIdExistsAsPersonID = false;
+            if (assignee_id != null) {
+                People people = new PeopleImpl(MySQLConnection.getConnection());
+                Collection<Person> personCollection = people.findAll();
+                assigneeIdExistsAsPersonID = false;
+                for (Person person : personCollection) {
+                    if (person.getPerson_id() == assignee_id)
+                        assigneeIdExistsAsPersonID = true;
+                }
+            }
+
+
+            if (assigneeIdExistsAsPersonID || assignee_id == null) {
                 Todo todo = new Todo(title, description, deadline, assignee_id);
                 Todo savedTodo = todoItems.create(todo);
                 System.out.println("Saved todo: " + savedTodo);
@@ -261,6 +270,19 @@ public class Main {
                 System.out.println(todoItems.update(newTodo));
             }else System.out.println("No such ID");
 
+        } catch (SQLException e) {
+            System.out.println("MySQL DB Connection Failed.");
+        }
+    }
+    public static void deleteTodo() {
+        try (Scanner scanner = new Scanner(System.in)) {
+            TodoItems todoItems = new TodoItemsImpl(MySQLConnection.getConnection());
+
+            System.out.println("Enter ID#: ");
+            int id = scanner.nextInt();
+
+            if (todoItems.deleteById(id)) System.out.println("Todo deleted successfully");
+            else System.out.println("Todo not deleted");
         } catch (SQLException e) {
             System.out.println("MySQL DB Connection Failed.");
         }
