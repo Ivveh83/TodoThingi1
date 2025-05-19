@@ -91,7 +91,7 @@ public class Main {
                 String newFirstName = scanner.nextLine();
                 System.out.println("Enter new last name: ");
                 String newLastName = scanner.nextLine();
-                Person newPerson = new Person(formerPerson.getPerson_id(), newFirstName, newLastName);
+                Person newPerson = new Person(formerPerson.getPersonId(), newFirstName, newLastName);
                 System.out.println(people.update(newPerson));
             } else System.out.println("No such ID");
 
@@ -126,33 +126,25 @@ public class Main {
             String deadlineAsString = scanner.nextLine();
             LocalDate deadline = LocalDate.parse(deadlineAsString);
             System.out.println("Enter Assignee Id: ");
-            Integer assignee_id = null;
+            Integer assigneeId = null;
             try {
-                assignee_id = scanner.nextInt();
+                assigneeId = scanner.nextInt();
             }catch (InputMismatchException ignored) {
             }finally {
                 scanner.nextLine();
             }
 
-            // Controlling that assignee_id has a matching person_id
-            boolean assigneeIdExistsAsPersonID = false;
-            if (assignee_id != null) {
-                People people = new PeopleImpl(MySQLConnection.getConnection());
-                Collection<Person> personCollection = people.findAll();
-                assigneeIdExistsAsPersonID = false;
-                for (Person person : personCollection) {
-                    if (person.getPerson_id() == assignee_id)
-                        assigneeIdExistsAsPersonID = true;
-                }
+            // Controlling that assigneeId has a matching person_id
+            People people = new PeopleImpl(MySQLConnection.getConnection());
+            Person person = null;
+            try {
+                person = people.findById(assigneeId);
+            }catch (NullPointerException ignored){
             }
-
-
-            if (assigneeIdExistsAsPersonID || assignee_id == null) {
-                Todo todo = new Todo(title, description, deadline, assignee_id);
+                Todo todo = new Todo(title, description, deadline, person);
                 Todo savedTodo = todoItems.create(todo);
                 System.out.println("Saved todo: " + savedTodo);
                 System.out.println("Operation is Done!");
-            }
 
         } catch (SQLException e) {
             System.out.println("MySQL DB Connection Failed.");
@@ -257,16 +249,22 @@ public class Main {
                 System.out.println("Enter new Status done (true/false): ");
                 boolean newDone = scanner.nextBoolean(); scanner.nextLine();
                 System.out.println("Enter new Assignee Id: ");
-                Integer newAssignee_id = null;
+                Integer newAssigneeId = null;
                 try {
-                    newAssignee_id = scanner.nextInt();
-                }catch (InputMismatchException e) {
-                    System.out.println(e.getMessage());
+                     newAssigneeId = scanner.nextInt();
+                }catch (InputMismatchException ignored){
                 }finally {
                     scanner.nextLine();
                 }
+                People people = new PeopleImpl(MySQLConnection.getConnection());
+                Person person;
+                try {
+                    person = people.findById(newAssigneeId);
+                }catch (NullPointerException e){
+                    person = null;
+                }
 
-                Todo newTodo = new Todo(formerTodo.getTodo_id(), newTitle, newDescritpion, newDeadline, newDone, newAssignee_id);
+                Todo newTodo = new Todo(formerTodo.getTodoId(), newTitle, newDescritpion, newDeadline, newDone, person);
                 System.out.println(todoItems.update(newTodo));
             }else System.out.println("No such ID");
 

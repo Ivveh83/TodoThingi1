@@ -1,5 +1,6 @@
 package DAO.impl;
 
+import DAO.People;
 import DAO.TodoItems;
 import model.Person;
 import model.Todo;
@@ -24,10 +25,10 @@ public class TodoItemsImpl implements TodoItems {
             preparedStatement.setString(2, todo.getDescription());
             preparedStatement.setDate(3, Date.valueOf(todo.getDeadLine()));
             preparedStatement.setBoolean(4, todo.getDone());
-            if (todo.getAssignee_id() == null) {
+            if (todo.getAssignee() == null) {
                 preparedStatement.setNull(5, java.sql.Types.INTEGER);
             }else {
-                preparedStatement.setInt(5, todo.getAssignee_id());
+                preparedStatement.setInt(5, todo.getAssignee().getPersonId());
             }
 
             int affectedRows = preparedStatement.executeUpdate();
@@ -38,7 +39,7 @@ public class TodoItemsImpl implements TodoItems {
                 if (resultSet.next()) {
                     int generatedTodoId = resultSet.getInt(1);
                     System.out.println("generatedTodoId = " + generatedTodoId);
-                    todo.setTodo_id(generatedTodoId);
+                    todo.setTodoId(generatedTodoId);
                 }
             }
         } catch (SQLException e) {
@@ -69,18 +70,15 @@ public class TodoItemsImpl implements TodoItems {
             findById.setInt(1, id);
             ResultSet rs = findById.executeQuery();
             while (rs.next()) {
-                Integer assignee_id = rs.getInt("assignee_id");
-                if (rs.wasNull())
-                    assignee_id = null;
-                Todo todo = new Todo(
+                People people = new PeopleImpl(connection);
+                return new Todo(
                         rs.getInt("todo_id"),
                         rs.getString("title"),
                         rs.getString("description"),
                         rs.getDate("deadLine").toLocalDate(),
                         rs.getBoolean("done"),
-                        assignee_id
+                        people.findById(rs.getInt("assignee_id"))
                 );
-                return todo;
             }
         } catch (SQLException e) {
             System.out.println("Error by finding by Id");
@@ -105,7 +103,7 @@ public class TodoItemsImpl implements TodoItems {
     }
 
     @Override
-    public Collection<Todo> findByAssignee(Integer id) {
+    public Collection<Todo> findByAssignee(int id) {
         Collection<Todo> todoCollection = new ArrayList<>();
         String sql = "SELECT todo_id, title, description, deadLine, done, assignee_id FROM todo_item WHERE assignee_id = ?";
         try (PreparedStatement findByAssigneeId = connection.prepareStatement(sql)) {
@@ -124,7 +122,7 @@ public class TodoItemsImpl implements TodoItems {
         Collection<Todo> todoCollection = new ArrayList<>();
         String sql = "SELECT todo_id, title, description, deadLine, done, assignee_id FROM todo_item WHERE assignee_id = ?";
         try (PreparedStatement findByAssigneeId = connection.prepareStatement(sql)) {
-            findByAssigneeId.setInt(1, person.getPerson_id());
+            findByAssigneeId.setInt(1, person.getPersonId());
             ResultSet rs = findByAssigneeId.executeQuery();
             todoCollection = returnCollection(rs);
         }catch (SQLException e) {
@@ -156,15 +154,15 @@ public class TodoItemsImpl implements TodoItems {
             updateTodo.setString(2, todo.getDescription());
             updateTodo.setDate(3, Date.valueOf(todo.getDeadLine()));
             updateTodo.setBoolean(4, todo.getDone());
-            if (todo.getAssignee_id() != null) {
-                updateTodo.setInt(5, todo.getAssignee_id());
+            if (todo.getAssignee() != null) {
+                updateTodo.setInt(5, todo.getAssignee().getPersonId());
             }else {
                 updateTodo.setNull(5, java.sql.Types.INTEGER);
             }
-            updateTodo.setInt(6, todo.getTodo_id());
+            updateTodo.setInt(6, todo.getTodoId());
             int rowsAffected = updateTodo.executeUpdate();
             if (rowsAffected > 0) {
-                return findById(todo.getTodo_id()); //Returns updated to-do
+                return findById(todo.getTodoId()); //Returns updated to-do
             }
         }catch (SQLException e) {
             System.out.println("Error by updating Todo");
@@ -190,18 +188,16 @@ public class TodoItemsImpl implements TodoItems {
     }
 
     Collection<Todo> returnCollection(ResultSet rs) throws SQLException{
+        People people = new PeopleImpl(connection);
         Collection<Todo> todoCollection = new ArrayList<>();
         while (rs.next()) {
-                Integer assignee_id = rs.getInt("assignee_id");
-                if (rs.wasNull())
-                    assignee_id = null;
                 Todo todo = new Todo(
                         rs.getInt("todo_id"),
                         rs.getString("title"),
                         rs.getString("description"),
                         rs.getDate("deadLine").toLocalDate(),
                         rs.getBoolean("done"),
-                        assignee_id
+                        people.findById(rs.getInt("assignee_id"))
                 );
                 todoCollection.add(todo);
             }

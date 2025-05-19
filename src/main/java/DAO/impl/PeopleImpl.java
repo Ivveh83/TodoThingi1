@@ -19,8 +19,8 @@ public class PeopleImpl implements People {
     public Person create(Person person) {
         String sql = "INSERT INTO person (first_name, last_name) VALUES(?, ?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            preparedStatement.setString(1, person.getFirst_name());
-            preparedStatement.setString(2, person.getLast_name());
+            preparedStatement.setString(1, person.getFirstName());
+            preparedStatement.setString(2, person.getLastName());
 
             int affectedRows = preparedStatement.executeUpdate();
             System.out.println(affectedRows);
@@ -30,7 +30,7 @@ public class PeopleImpl implements People {
                 if (resultSet.next()) {
                     int generatedPersonId = resultSet.getInt(1);
                     System.out.println("generatedPersonId = " + generatedPersonId);
-                    person.setPerson_id(generatedPersonId);
+                    person.setPersonId(generatedPersonId);
                 }
             }
         } catch (SQLException e) {
@@ -71,15 +71,14 @@ public class PeopleImpl implements People {
             findById.setInt(1, id);
             ResultSet rs = findById.executeQuery();
             while (rs.next()) {
-                Person person = new Person(
+                return new Person(
                         rs.getInt("person_id"),
                         rs.getString("first_name"),
                         rs.getString("last_name")
                 );
-                return person;
             }
         } catch (SQLException e) {
-            System.out.println("Error by finding by Id");
+            System.out.println("Error when finding by Id");
             e.printStackTrace();
         }
         return null;
@@ -110,12 +109,13 @@ public class PeopleImpl implements People {
         String sql = "UPDATE person SET first_name = ?, last_name = ? WHERE person_id = ?";
         try (PreparedStatement updatePerson = connection.prepareStatement(sql)) {
 
-            updatePerson.setString(1, person.getFirst_name());
-            updatePerson.setString(2, person.getLast_name());
-            updatePerson.setInt(3, person.getPerson_id());
+            updatePerson.setString(1, person.getFirstName());
+            updatePerson.setString(2, person.getLastName());
+            updatePerson.setInt(3, person.getPersonId());
             int rowsAffected = updatePerson.executeUpdate();
+            System.out.println("rowsAffected : " + rowsAffected);
             if (rowsAffected > 0) {
-                return findById(person.getPerson_id()); //Returns updated person
+                return findById(person.getPersonId()); //Returns updated person
             }
         }catch (SQLException e) {
             System.out.println("Error by updating Person");

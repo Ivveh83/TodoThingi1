@@ -6,38 +6,38 @@ import java.util.Objects;
 public class Todo {
 
 //    static int counter;
-    private int todo_id;
+    private int todoId;
     private String title;
     private String description;
     private LocalDate deadLine;
     private boolean done;
-    private Integer assignee_id;
+    private Person assignee;
 
     //Constructor for creating a db post
-    public Todo(String title, String description, LocalDate deadLine, Integer assignee_id){
+    public Todo(String title, String description, LocalDate deadLine, Person assignee){
         setTitle(title);
         setDescription(description);
         setDeadLine(deadLine);
         setDone(false);
-        setAssignee_id(assignee_id);
+        setAssignee(assignee);
     }
 
     //Constructor for reading a db post
-    public Todo(int todo_id, String title, String description, LocalDate deadLine, boolean done, Integer assignee_id){
-        setTodo_id(todo_id);
+    public Todo(int todoId, String title, String description, LocalDate deadLine, boolean done, Person assignee){
+        setTodoId(todoId);
         setTitle(title);
         setDescription(description);
         setDeadLine(deadLine);
         setDone(done);
-        setAssignee_id(assignee_id);
+        setAssignee(assignee);
     }
 
-    public int getTodo_id() {
-        return todo_id;
+    public int getTodoId() {
+        return todoId;
     }
 
-    public void setTodo_id(int todo_id) {
-        this.todo_id = todo_id;
+    public void setTodoId(int todoId) {
+        this.todoId = todoId;
     }
 
     public String getTitle() {
@@ -84,24 +84,24 @@ public class Todo {
         this.done = done;
     }
 
-    public Integer getAssignee_id() {
-        return assignee_id;
+    public Person getAssignee() {
+        return assignee;
     }
 
-    public void setAssignee_id(Integer assignee_id) {
-        this.assignee_id = assignee_id;
+    public void setAssignee(Person assignee) {
+        this.assignee = assignee;
     }
 
 
     @Override
     public String toString() {
         return "Todo{" +
-                "todo_id=" + todo_id +
+                "todo_id=" + todoId +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", deadLine=" + deadLine +
                 ", done=" + done +
-                ", assignee_id=" + assignee_id +
+                ", assignee=" + assignee +
                 '}';
     }
 
@@ -109,14 +109,14 @@ public class Todo {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Todo todo = (Todo) o;
-        return todo_id == todo.todo_id && Objects.equals(title, todo.title)
+        return todoId == todo.todoId && Objects.equals(title, todo.title)
                 && Objects.equals(description, todo.description) && Objects.equals(deadLine, todo.deadLine)
-                && done == todo.done && Objects.equals(assignee_id, todo.assignee_id);
+                && done == todo.done && Objects.equals(assignee, todo.assignee);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(todo_id, title, description, deadLine, done, assignee_id);
+        return Objects.hash(todoId, title, description, deadLine, done, assignee);
     }
 
     public boolean isOverdue(){
