@@ -29,7 +29,7 @@ public class PeopleImpl implements People {
                 ResultSet resultSet = preparedStatement.getGeneratedKeys();
                 if (resultSet.next()) {
                     int generatedPersonId = resultSet.getInt(1);
-                    System.out.println("generatedPersonId = " + generatedPersonId);
+//                    System.out.println("generatedPersonId = " + generatedPersonId);
                     person.setPersonId(generatedPersonId);
                 }
             }
@@ -141,3 +141,4 @@ public class PeopleImpl implements People {
         return false;
     }
 }
+

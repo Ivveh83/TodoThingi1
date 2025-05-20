@@ -12,7 +12,7 @@ import java.util.*;
 public class Main {
     public static void main(String[] args) {
 
-        deleteTodo();
+        printTodoById();
 
     }
 
@@ -21,11 +21,11 @@ public class Main {
 
             People people = new PeopleImpl(MySQLConnection.getConnection());
             System.out.println("Enter first name: ");
-            String first_name = scanner.nextLine();
+            String firstName = scanner.nextLine();
             System.out.println("Enter last name: ");
-            String last_name = scanner.nextLine();
+            String lastName = scanner.nextLine();
 
-            Person person = new Person(first_name, last_name);
+            Person person = new Person(firstName, lastName);
             Person savedPerson = people.create(person);
             System.out.println("Saved person: " + savedPerson);
             System.out.println("Operation is Done!");
@@ -133,8 +133,7 @@ public class Main {
             }finally {
                 scanner.nextLine();
             }
-
-            // Controlling that assigneeId has a matching person_id
+            //Fetching person object with assigneeId if exists, otherwise null
             People people = new PeopleImpl(MySQLConnection.getConnection());
             Person person = null;
             try {

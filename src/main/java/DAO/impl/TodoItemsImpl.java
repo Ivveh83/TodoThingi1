@@ -52,7 +52,8 @@ public class TodoItemsImpl implements TodoItems {
     @Override
     public Collection<Todo> findAll() {
         Collection<Todo> todoCollection = new ArrayList<>();
-        String sql = "SELECT todo_id, title, description, deadLine, done, assignee_id FROM todo_item";
+        String sql = "SELECT todo_id, title, description, deadLine, done, assignee_id, person_id, first_name," +
+                " last_name FROM todo_item t LEFT JOIN person p ON t.assignee_id = p.person_id";
         try (Statement statement = connection.createStatement()){
             ResultSet rs = statement.executeQuery(sql);
             todoCollection = returnCollection(rs);
@@ -65,19 +66,20 @@ public class TodoItemsImpl implements TodoItems {
 
     @Override
     public Todo findById(int id) {
-        String sql = "SELECT todo_id, title, description, deadLine, done, assignee_id FROM todo_item WHERE todo_id = ?";
+        String sql = "SELECT * FROM todo_item t LEFT JOIN person p ON t.assignee_id = p.person_id WHERE t.todo_id = ?";
         try (PreparedStatement findById = connection.prepareStatement(sql)){
             findById.setInt(1, id);
             ResultSet rs = findById.executeQuery();
-            while (rs.next()) {
-                People people = new PeopleImpl(connection);
+            if (rs.next()) {
                 return new Todo(
                         rs.getInt("todo_id"),
                         rs.getString("title"),
                         rs.getString("description"),
                         rs.getDate("deadLine").toLocalDate(),
                         rs.getBoolean("done"),
-                        people.findById(rs.getInt("assignee_id"))
+                        new Person(rs.getInt("person_id"),
+                                rs.getString("first_name"),
+                                rs.getString("last_name"))
                 );
             }
         } catch (SQLException e) {
@@ -90,7 +92,7 @@ public class TodoItemsImpl implements TodoItems {
     @Override
     public Collection<Todo> findByDoneStatus(boolean done) {
         Collection<Todo> todoCollection = new ArrayList<>();
-        String sql = "SELECT todo_id, title, description, deadLine, done, assignee_id FROM todo_item WHERE done = ?";
+        String sql = "SELECT * FROM todo_item t LEFT JOIN person p ON t.assignee_id = p.person_id WHERE t.done = ?";
         try (PreparedStatement findByDoneStatus = connection.prepareStatement(sql)) {
             findByDoneStatus.setBoolean(1, done);
             ResultSet rs = findByDoneStatus.executeQuery();
@@ -105,7 +107,8 @@ public class TodoItemsImpl implements TodoItems {
     @Override
     public Collection<Todo> findByAssignee(int id) {
         Collection<Todo> todoCollection = new ArrayList<>();
-        String sql = "SELECT todo_id, title, description, deadLine, done, assignee_id FROM todo_item WHERE assignee_id = ?";
+        String sql = "SELECT todo_id, title, description, deadLine, done, assignee_id, person_id, first_name, last_name" +
+                " FROM todo_item t JOIN person p ON t.assignee_id = p.person_id WHERE assignee_id = ?";
         try (PreparedStatement findByAssigneeId = connection.prepareStatement(sql)) {
             findByAssigneeId.setInt(1, id);
             ResultSet rs = findByAssigneeId.executeQuery();
@@ -120,7 +123,8 @@ public class TodoItemsImpl implements TodoItems {
     @Override
     public Collection<Todo> findByAssignee(Person person) {
         Collection<Todo> todoCollection = new ArrayList<>();
-        String sql = "SELECT todo_id, title, description, deadLine, done, assignee_id FROM todo_item WHERE assignee_id = ?";
+        String sql = "SELECT todo_id, title, description, deadLine, done, assignee_id, person_id, first_name, last_name" +
+                " FROM todo_item t JOIN person p ON t.assignee_id = p.person_id WHERE assignee_id = ?";
         try (PreparedStatement findByAssigneeId = connection.prepareStatement(sql)) {
             findByAssigneeId.setInt(1, person.getPersonId());
             ResultSet rs = findByAssigneeId.executeQuery();
@@ -135,7 +139,8 @@ public class TodoItemsImpl implements TodoItems {
     @Override
     public Collection<Todo> findByUnassignedTodoItems() {
         Collection<Todo> todoCollection = new ArrayList<>();
-        String sql = "SELECT todo_id, title, description, deadLine, done, assignee_id FROM todo_item WHERE assignee_id IS NULL";
+        String sql = "SELECT todo_id, title, description, deadLine, done, assignee_id, person_id, first_name, last_name" +
+                " FROM todo_item t LEFT JOIN person p ON t.assignee_id = p.person_id WHERE assignee_id IS NULL";
         try (Statement statement = connection.createStatement()) {
             ResultSet rs = statement.executeQuery(sql);
             todoCollection = returnCollection(rs);
@@ -148,7 +153,8 @@ public class TodoItemsImpl implements TodoItems {
 
     @Override
     public Todo update(Todo todo) {
-        String sql = "UPDATE todo_item SET title = ?, description = ?, deadline = ?, done = ?, assignee_id = ? WHERE todo_id = ?";
+        String sql = "UPDATE todo_item SET title = ?, description = ?, deadline = ?, done = ?, assignee_id = ? " +
+                "WHERE todo_id = ?";
         try (PreparedStatement updateTodo = connection.prepareStatement(sql)) {
             updateTodo.setString(1, todo.getTitle());
             updateTodo.setString(2, todo.getDescription());
@@ -162,7 +168,7 @@ public class TodoItemsImpl implements TodoItems {
             updateTodo.setInt(6, todo.getTodoId());
             int rowsAffected = updateTodo.executeUpdate();
             if (rowsAffected > 0) {
-                return findById(todo.getTodoId()); //Returns updated to-do
+                return findById(todo.getTodoId()); //Returns updated object
             }
         }catch (SQLException e) {
             System.out.println("Error by updating Todo");
@@ -187,8 +193,8 @@ public class TodoItemsImpl implements TodoItems {
         return false;
     }
 
-    Collection<Todo> returnCollection(ResultSet rs) throws SQLException{
-        People people = new PeopleImpl(connection);
+    /**@param rs must contain both table todo_item and person, so JOIN has to be used in the QUERY.*/
+    Collection<Todo> returnCollection(ResultSet rs) throws SQLException {
         Collection<Todo> todoCollection = new ArrayList<>();
         while (rs.next()) {
                 Todo todo = new Todo(
@@ -197,7 +203,9 @@ public class TodoItemsImpl implements TodoItems {
                         rs.getString("description"),
                         rs.getDate("deadLine").toLocalDate(),
                         rs.getBoolean("done"),
-                        people.findById(rs.getInt("assignee_id"))
+                        new Person(rs.getInt("person_id"),
+                                rs.getString("first_name"),
+                                rs.getString("last_name"))
                 );
                 todoCollection.add(todo);
             }
