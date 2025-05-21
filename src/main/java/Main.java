@@ -4,6 +4,7 @@ import DAO.impl.PeopleImpl;
 import DAO.impl.TodoItemsImpl;
 import db.MySQLConnection;
 import model.*;
+import smtp.TLSEmail;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -12,8 +13,7 @@ import java.util.*;
 public class Main {
     public static void main(String[] args) {
 
-        printTodoById();
-
+        printupdatedTodo();
     }
 
     public static void addPerson() {
@@ -24,8 +24,10 @@ public class Main {
             String firstName = scanner.nextLine();
             System.out.println("Enter last name: ");
             String lastName = scanner.nextLine();
+            System.out.println("Enter email: ");
+            String email = scanner.nextLine();
 
-            Person person = new Person(firstName, lastName);
+            Person person = new Person(firstName, lastName, email);
             Person savedPerson = people.create(person);
             System.out.println("Saved person: " + savedPerson);
             System.out.println("Operation is Done!");
@@ -91,7 +93,9 @@ public class Main {
                 String newFirstName = scanner.nextLine();
                 System.out.println("Enter new last name: ");
                 String newLastName = scanner.nextLine();
-                Person newPerson = new Person(formerPerson.getPersonId(), newFirstName, newLastName);
+                System.out.println("Enter new email: ");
+                String email = scanner.nextLine();
+                Person newPerson = new Person(formerPerson.getPersonId(), newFirstName, newLastName, email);
                 System.out.println(people.update(newPerson));
             } else System.out.println("No such ID");
 
@@ -191,6 +195,7 @@ public class Main {
         }
 
     }
+
     public static void printByAssigneeId() {
         try (Scanner scanner = new Scanner(System.in)) {
             TodoItems todoItems = new TodoItemsImpl(MySQLConnection.getConnection());
@@ -206,6 +211,7 @@ public class Main {
         }
 
     }
+
     public static void printByAssigneeIdWithPerson() {
         try (Scanner scanner = new Scanner(System.in)) {
             TodoItems todoItems = new TodoItemsImpl(MySQLConnection.getConnection());
@@ -262,15 +268,14 @@ public class Main {
                 }catch (NullPointerException e){
                     person = null;
                 }
-
                 Todo newTodo = new Todo(formerTodo.getTodoId(), newTitle, newDescritpion, newDeadline, newDone, person);
                 System.out.println(todoItems.update(newTodo));
             }else System.out.println("No such ID");
-
         } catch (SQLException e) {
             System.out.println("MySQL DB Connection Failed.");
         }
     }
+
     public static void deleteTodo() {
         try (Scanner scanner = new Scanner(System.in)) {
             TodoItems todoItems = new TodoItemsImpl(MySQLConnection.getConnection());

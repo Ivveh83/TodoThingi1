@@ -4,6 +4,7 @@ import DAO.People;
 import DAO.TodoItems;
 import model.Person;
 import model.Todo;
+import smtp.TLSEmail;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -29,11 +30,18 @@ public class TodoItemsImpl implements TodoItems {
                 preparedStatement.setNull(5, java.sql.Types.INTEGER);
             }else {
                 preparedStatement.setInt(5, todo.getAssignee().getPersonId());
+                //Sending email if exists
+                String email = todo.getAssignee().getEmail();
+                if (email != null) {
+                    String subject = "New Task Assigned to You";
+                    String body = "Hello " + todo.getAssignee().getFirstName() +
+                            "! You have a new assignment " + "to do: " + todo.getTitle() + ". Description: "
+                            + todo.getDescription() + ". Deadline: " + todo.getDeadLine();
+                    TLSEmail.send(email, subject, body);
+                }
             }
-
             int affectedRows = preparedStatement.executeUpdate();
             System.out.println(affectedRows);
-
             if (affectedRows > 0) {
                 ResultSet resultSet = preparedStatement.getGeneratedKeys();
                 if (resultSet.next()) {
@@ -53,7 +61,7 @@ public class TodoItemsImpl implements TodoItems {
     public Collection<Todo> findAll() {
         Collection<Todo> todoCollection = new ArrayList<>();
         String sql = "SELECT todo_id, title, description, deadLine, done, assignee_id, person_id, first_name," +
-                " last_name FROM todo_item t LEFT JOIN person p ON t.assignee_id = p.person_id";
+                " last_name, email FROM todo_item t LEFT JOIN person p ON t.assignee_id = p.person_id";
         try (Statement statement = connection.createStatement()){
             ResultSet rs = statement.executeQuery(sql);
             todoCollection = returnCollection(rs);
@@ -79,7 +87,8 @@ public class TodoItemsImpl implements TodoItems {
                         rs.getBoolean("done"),
                         new Person(rs.getInt("person_id"),
                                 rs.getString("first_name"),
-                                rs.getString("last_name"))
+                                rs.getString("last_name"),
+                                rs.getString("email"))
                 );
             }
         } catch (SQLException e) {
@@ -107,8 +116,8 @@ public class TodoItemsImpl implements TodoItems {
     @Override
     public Collection<Todo> findByAssignee(int id) {
         Collection<Todo> todoCollection = new ArrayList<>();
-        String sql = "SELECT todo_id, title, description, deadLine, done, assignee_id, person_id, first_name, last_name" +
-                " FROM todo_item t JOIN person p ON t.assignee_id = p.person_id WHERE assignee_id = ?";
+        String sql = "SELECT todo_id, title, description, deadLine, done, assignee_id, person_id, first_name," +
+                " last_name, email FROM todo_item t JOIN person p ON t.assignee_id = p.person_id WHERE assignee_id = ?";
         try (PreparedStatement findByAssigneeId = connection.prepareStatement(sql)) {
             findByAssigneeId.setInt(1, id);
             ResultSet rs = findByAssigneeId.executeQuery();
@@ -123,8 +132,8 @@ public class TodoItemsImpl implements TodoItems {
     @Override
     public Collection<Todo> findByAssignee(Person person) {
         Collection<Todo> todoCollection = new ArrayList<>();
-        String sql = "SELECT todo_id, title, description, deadLine, done, assignee_id, person_id, first_name, last_name" +
-                " FROM todo_item t JOIN person p ON t.assignee_id = p.person_id WHERE assignee_id = ?";
+        String sql = "SELECT todo_id, title, description, deadLine, done, assignee_id, person_id, first_name," +
+                " last_name, email FROM todo_item t JOIN person p ON t.assignee_id = p.person_id WHERE assignee_id = ?";
         try (PreparedStatement findByAssigneeId = connection.prepareStatement(sql)) {
             findByAssigneeId.setInt(1, person.getPersonId());
             ResultSet rs = findByAssigneeId.executeQuery();
@@ -139,8 +148,8 @@ public class TodoItemsImpl implements TodoItems {
     @Override
     public Collection<Todo> findByUnassignedTodoItems() {
         Collection<Todo> todoCollection = new ArrayList<>();
-        String sql = "SELECT todo_id, title, description, deadLine, done, assignee_id, person_id, first_name, last_name" +
-                " FROM todo_item t LEFT JOIN person p ON t.assignee_id = p.person_id WHERE assignee_id IS NULL";
+        String sql = "SELECT todo_id, title, description, deadLine, done, assignee_id, person_id, first_name," +
+                " last_name, email FROM todo_item t LEFT JOIN person p ON t.assignee_id = p.person_id WHERE assignee_id IS NULL";
         try (Statement statement = connection.createStatement()) {
             ResultSet rs = statement.executeQuery(sql);
             todoCollection = returnCollection(rs);
@@ -162,6 +171,15 @@ public class TodoItemsImpl implements TodoItems {
             updateTodo.setBoolean(4, todo.getDone());
             if (todo.getAssignee() != null) {
                 updateTodo.setInt(5, todo.getAssignee().getPersonId());
+                //Sending email if exists
+                String email = todo.getAssignee().getEmail();
+                if (email != null) {
+                    String subject = "An Assigned Task has been Updated";
+                    String body = "Hello " + todo.getAssignee().getFirstName() +
+                            "! New data for assignment: Title: " + todo.getTitle() + ". Description: "
+                            + todo.getDescription() + ". Deadline: " + todo.getDeadLine();
+                    TLSEmail.send(email, subject, body);
+                }
             }else {
                 updateTodo.setNull(5, java.sql.Types.INTEGER);
             }
@@ -205,7 +223,8 @@ public class TodoItemsImpl implements TodoItems {
                         rs.getBoolean("done"),
                         new Person(rs.getInt("person_id"),
                                 rs.getString("first_name"),
-                                rs.getString("last_name"))
+                                rs.getString("last_name"),
+                                rs.getString("email"))
                 );
                 todoCollection.add(todo);
             }

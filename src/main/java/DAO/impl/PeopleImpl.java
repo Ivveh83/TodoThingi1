@@ -17,10 +17,11 @@ public class PeopleImpl implements People {
 
     @Override
     public Person create(Person person) {
-        String sql = "INSERT INTO person (first_name, last_name) VALUES(?, ?)";
+        String sql = "INSERT INTO person (first_name, last_name, email) VALUES(?, ?, ?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, person.getFirstName());
             preparedStatement.setString(2, person.getLastName());
+            preparedStatement.setString(3, person.getEmail());
 
             int affectedRows = preparedStatement.executeUpdate();
             System.out.println(affectedRows);
@@ -44,7 +45,7 @@ public class PeopleImpl implements People {
     public Collection<Person> findAll() {
 
         Collection<Person> personCollection = new ArrayList<>();
-        String sql = "SELECT person_id, first_name, last_name FROM person";
+        String sql = "SELECT person_id, first_name, last_name, email FROM person";
         try (Statement statement = connection.createStatement()){
 
             ResultSet rs = statement.executeQuery(sql);
@@ -52,7 +53,8 @@ public class PeopleImpl implements People {
                 Person person = new Person(
                         rs.getInt("person_id"),
                         rs.getString("first_name"),
-                        rs.getString("last_name")
+                        rs.getString("last_name"),
+                        rs.getString("email")
                 );
                 personCollection.add(person);
             }
@@ -66,7 +68,7 @@ public class PeopleImpl implements People {
 
     @Override
     public Person findById(int id) {
-        String sql = "SELECT person_id, first_name, last_name FROM person WHERE person_id = ?";
+        String sql = "SELECT person_id, first_name, last_name, email FROM person WHERE person_id = ?";
         try (PreparedStatement findById = connection.prepareStatement(sql)){
             findById.setInt(1, id);
             ResultSet rs = findById.executeQuery();
@@ -74,7 +76,8 @@ public class PeopleImpl implements People {
                 return new Person(
                         rs.getInt("person_id"),
                         rs.getString("first_name"),
-                        rs.getString("last_name")
+                        rs.getString("last_name"),
+                        rs.getString("email")
                 );
             }
         } catch (SQLException e) {
@@ -87,7 +90,7 @@ public class PeopleImpl implements People {
     @Override
     public Collection<Person> findByName(String name) {
         Collection<Person> personArrayList = new ArrayList<>();
-        String sql = "SELECT person_id, first_name, last_name FROM person WHERE first_name = ?";
+        String sql = "SELECT person_id, first_name, last_name, email FROM person WHERE first_name = ?";
         try (PreparedStatement findByName = connection.prepareStatement(sql)) {
             findByName.setString(1, name);
             ResultSet rs = findByName.executeQuery();
@@ -95,7 +98,8 @@ public class PeopleImpl implements People {
                 personArrayList.add(new Person(
                         rs.getInt("person_id"),
                         rs.getString("first_name"),
-                        rs.getString("last_name")));
+                        rs.getString("last_name"),
+                        rs.getString("email")));
             }
         }catch (SQLException e) {
             System.out.println("Error when finding by Name");
@@ -106,12 +110,13 @@ public class PeopleImpl implements People {
 
     @Override
     public Person update(Person person) {
-        String sql = "UPDATE person SET first_name = ?, last_name = ? WHERE person_id = ?";
+        String sql = "UPDATE person SET first_name = ?, last_name = ?, email = ? WHERE person_id = ?";
         try (PreparedStatement updatePerson = connection.prepareStatement(sql)) {
 
             updatePerson.setString(1, person.getFirstName());
             updatePerson.setString(2, person.getLastName());
-            updatePerson.setInt(3, person.getPersonId());
+            updatePerson.setString(3, person.getEmail());
+            updatePerson.setInt(4, person.getPersonId());
             int rowsAffected = updatePerson.executeUpdate();
             System.out.println("rowsAffected : " + rowsAffected);
             if (rowsAffected > 0) {
