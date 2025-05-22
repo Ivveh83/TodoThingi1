@@ -52,25 +52,29 @@ public class Person {
         return email;
     }
     public void setEmail(String email) {
-        if (!email.isBlank()){
-        }else throw new IllegalArgumentException("Email must not be blank.");
-        if (email.contains("@")){
-        }else throw new IllegalArgumentException("Email must contain an @-sign.");
-        if (!email.substring(email.indexOf("@") + 1).isBlank() &&
-                !email.substring(email.indexOf("@") + 1).equals(".")){
-        }else throw new IllegalArgumentException("Email must contain a service provider name.");
-        if (email.contains(".")){
-        }else throw new IllegalArgumentException("Email must contain a \".\"-sign.");
-        if (!email.substring(email.indexOf(".") + 1).isBlank()){
-        }else throw new IllegalArgumentException("Email must contain a top-level domain.");
+        if (email.isBlank()) {
+            throw new IllegalArgumentException("Email must not be blank.");
+        }
+        if (!email.contains("@")) {
+            throw new IllegalArgumentException("Email must contain an @-sign.");
+        }
+        String domainPart = email.substring(email.indexOf("@") + 1);
+        if (domainPart.isBlank() || domainPart.startsWith(".")) {
+            throw new IllegalArgumentException("Email must contain a service provider name.");
+        }
+        if (!domainPart.contains(".")) {
+            throw new IllegalArgumentException("Email must contain a '.'-sign.");
+        }
+        String topLevelDomain = domainPart.substring(domainPart.lastIndexOf(".") + 1);
+        if (topLevelDomain.isBlank()) {
+            throw new IllegalArgumentException("Email must contain a top-level domain.");
+        }
         System.out.println("Email is valid");
         this.email = email;
     }
 
-
     @Override
     public String toString(){
-
 //StringBuilder sb = new StringBuilder(); .append(), String result = sb.toString();
         StringBuilder sb = new StringBuilder();
         if (this.personId == 0) return null;
