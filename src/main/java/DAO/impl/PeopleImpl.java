@@ -6,9 +6,11 @@ import model.Person;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.logging.Logger;
 
 public class PeopleImpl implements People {
 
+    private static final Logger logger = Logger.getLogger(PeopleImpl.class.getName());
     private Connection connection;
 
     public PeopleImpl(Connection connection) {
@@ -35,7 +37,7 @@ public class PeopleImpl implements People {
                 }
             }
         } catch (SQLException e) {
-            System.out.println("Error saving person");
+            logger.info("Error saving person");
             e.printStackTrace();
         }
         return person;
@@ -60,7 +62,7 @@ public class PeopleImpl implements People {
             }
 
         }catch (SQLException e) {
-            System.out.println("Error collecting person");
+            logger.info("Error collecting person");
             e.printStackTrace();
         }
         return personCollection;
@@ -81,7 +83,7 @@ public class PeopleImpl implements People {
                 );
             }
         } catch (SQLException e) {
-            System.out.println("Error when finding by Id");
+            logger.info("Error when finding by Id");
             e.printStackTrace();
         }
         return null;
@@ -102,7 +104,7 @@ public class PeopleImpl implements People {
                         rs.getString("email")));
             }
         }catch (SQLException e) {
-            System.out.println("Error when finding by Name");
+            logger.info("Error when finding by Name");
             e.printStackTrace();
         }
         return personArrayList;
@@ -123,7 +125,7 @@ public class PeopleImpl implements People {
                 return findById(person.getPersonId()); //Returns updated person
             }
         }catch (SQLException e) {
-            System.out.println("Error by updating Person");
+            logger.info("Error by updating Person");
             e.printStackTrace();
         }
         return null;
@@ -140,7 +142,7 @@ public class PeopleImpl implements People {
                 return true;
             }
         } catch (SQLException e) {
-            System.out.println("Error by deleting person");
+            logger.info("Error by deleting person");
             e.printStackTrace();
         }
         return false;

@@ -9,10 +9,12 @@ import smtp.TLSEmail;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.logging.Logger;
 
 public class TodoItemsImpl implements TodoItems {
 
     private Connection connection;
+    private static final Logger logger = Logger.getLogger(TodoItemsImpl.class.getName());
 
     public TodoItemsImpl(Connection connection) {
         this.connection = connection;
@@ -51,7 +53,7 @@ public class TodoItemsImpl implements TodoItems {
                 }
             }
         } catch (SQLException e) {
-            System.out.println("Error saving Todo");
+            logger.info("Error saving Todo");
             e.printStackTrace();
         }
         return todo;
@@ -66,7 +68,7 @@ public class TodoItemsImpl implements TodoItems {
             ResultSet rs = statement.executeQuery(sql);
             todoCollection = returnCollection(rs);
         }catch (SQLException e) {
-            System.out.println("Error collecting person");
+            logger.info("Error collecting person");
             e.printStackTrace();
         }
         return todoCollection;
@@ -92,7 +94,7 @@ public class TodoItemsImpl implements TodoItems {
                 );
             }
         } catch (SQLException e) {
-            System.out.println("Error by finding by Id");
+            logger.info("Error by finding by Id");
             e.printStackTrace();
         }
         return null;
@@ -107,7 +109,7 @@ public class TodoItemsImpl implements TodoItems {
             ResultSet rs = findByDoneStatus.executeQuery();
             todoCollection = returnCollection(rs);
         }catch (SQLException e) {
-            System.out.println("Error collecting person");
+            logger.info("Error collecting person");
             e.printStackTrace();
         }
         return todoCollection;
@@ -123,7 +125,7 @@ public class TodoItemsImpl implements TodoItems {
             ResultSet rs = findByAssigneeId.executeQuery();
             todoCollection = returnCollection(rs);
         }catch (SQLException e) {
-            System.out.println("Error collecting person");
+            logger.info("Error collecting person");
             e.printStackTrace();
         }
         return todoCollection;
@@ -139,7 +141,7 @@ public class TodoItemsImpl implements TodoItems {
             ResultSet rs = findByAssigneeId.executeQuery();
             todoCollection = returnCollection(rs);
         }catch (SQLException e) {
-            System.out.println("Error collecting person");
+            logger.info("Error collecting person");
             e.printStackTrace();
         }
         return todoCollection;
@@ -154,7 +156,7 @@ public class TodoItemsImpl implements TodoItems {
             ResultSet rs = statement.executeQuery(sql);
             todoCollection = returnCollection(rs);
         }catch (SQLException e) {
-            System.out.println("Error collecting person");
+            logger.info("Error collecting person");
             e.printStackTrace();
         }
         return todoCollection;
@@ -189,7 +191,7 @@ public class TodoItemsImpl implements TodoItems {
                 return findById(todo.getTodoId()); //Returns updated object
             }
         }catch (SQLException e) {
-            System.out.println("Error by updating Todo");
+            logger.info("Error by updating Todo");
             e.printStackTrace();
         }
         return null;
@@ -205,7 +207,7 @@ public class TodoItemsImpl implements TodoItems {
                 return true;
             }
         } catch (SQLException e) {
-            System.out.println("Error by deleting todo");
+            logger.info("Error by deleting todo");
             e.printStackTrace();
         }
         return false;
